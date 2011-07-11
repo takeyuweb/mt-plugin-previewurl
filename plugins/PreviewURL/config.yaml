@@ -1,0 +1,27 @@
+l10n_class: PreviewURL::L10N
+id: PreviewURL
+key: previewurl
+name: <__trans phrase="PreviewURL">
+version: 1.0.0
+author_name: <__trans phrase="_PLUGIN_AUTHOR">
+author_link: http://takeyu-web.com/
+description: <__trans phrase="_PLUGIN_DESCRIPTION">
+
+schema_version: 20110708.002
+
+object_types:
+  entry.previewurl: PreviewURL::Entry
+
+init_request: |
+  sub {
+    my $app = MT->instance;
+    $app->{requires_login} = 0 if $app->mode eq 'view_preview';
+  }
+
+applications:
+  cms:
+    methods:
+      view_preview: $PreviewURL::PreviewURL::CMS::hdlr_view_preview
+
+callbacks:
+  template_param.edit_entry: $PreviewURL::PreviewURL::Callbacks::hdlr_template_param_edit_entry

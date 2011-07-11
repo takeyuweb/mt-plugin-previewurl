@@ -1,10 +1,10 @@
 PreviewURL プラグイン
 ===========
 
-Author:: Yuichi Takeuchi <uzuki05@takeyu-web.com>
-Website:: http://takeyu-web.com/
-Copyright:: Copyright 2011 Yuichi Takeuchi
-License:: GPL v2
+* Author:: Yuichi Takeuchi <uzuki05@takeyu-web.com>
+* Website:: http://takeyu-web.com/
+* Copyright:: Copyright 2011 Yuichi Takeuchi
+* License:: GPL v2
 
 下書き状態のブログ記事及びウェブページのプレビュー用URLを提供します。
 
@@ -25,9 +25,14 @@ plugins/PreviewURL を MT_DIR/plugins/ にコピーして下さい。
 
 不要。
 
+なお、プレビューURLの組み立てに、mt-config.cgiの CGIPath または AdminCGIPath を使用する為、これらの設定は http: あるいは https: から記述して下さい。
+
 利用方法
 -----------
 
 インストールすると、下書き状態の記事の記事編集ページにプレビューURLが表示されるようになりますのでコピーしてご利用下さい。
 
+お約束
+-----------
 
+ご利用は自己責任で。

@@ -36,7 +36,8 @@ sub hdlr_view_preview {
 
     $app->param( 'basename', '' );
 
-    $app->user($author);
+    $app->user( $author );
+    $app->permissions( $author->permissions($blog_id) );
     $app->preview_entry; # プレビューファイル生成
 
     # 生成されたファイルの内容を読込
@@ -61,46 +62,5 @@ sub hdlr_view_preview {
     my $fmgr = $blog->file_mgr;
     return $fmgr->get_data( $archive_file );
 }
-
-sub _create_temp_entry {
-    my $app         = shift;
-    my $type        = $app->param('_type') || 'entry';
-    my $entry_class = $app->model($type);
-    my $blog_id     = $app->param('blog_id');
-    my $blog        = $app->blog;
-    my $id          = $app->param('id');
-    my $entry;
-    my $user_id = $app->user->id;
-
-    if ($id) {
-        $entry = $entry_class->load( { id => $id, blog_id => $blog_id } )
-            or return $app->errtrans("Invalid request.");
-        $user_id = $entry->author_id;
-    }
-    else {
-        $entry = $entry_class->new;
-        $entry->author_id($user_id);
-        $entry->id(-1);    # fake out things like MT::Taggable::__load_tags
-        $entry->blog_id($blog_id);
-    }
-
-    my $names = $entry->column_names;
-    my %values = map { $_ => scalar $app->param($_) } @$names;
-    delete $values{'id'} unless $app->param('id');
-    ## Strip linefeed characters.
-    for my $col (qw( text excerpt text_more keywords )) {
-        $values{$col} =~ tr/\r//d if $values{$col};
-    }
-    $values{allow_comments} = 0
-        if !defined( $values{allow_comments} )
-            || $app->param('allow_comments') eq '';
-    $values{allow_pings} = 0
-        if !defined( $values{allow_pings} )
-            || $app->param('allow_pings') eq '';
-    $entry->set_values( \%values );
-
-    return $entry;
-}
-
 
 1;

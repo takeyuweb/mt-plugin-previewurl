@@ -2,7 +2,7 @@ l10n_class: PreviewURL::L10N
 id: PreviewURL
 key: previewurl
 name: <__trans phrase="PreviewURL">
-version: 1.0.0
+version: 1.0.1
 author_name: <__trans phrase="_PLUGIN_AUTHOR">
 author_link: http://takeyu-web.com/
 description: <__trans phrase="_PLUGIN_DESCRIPTION">

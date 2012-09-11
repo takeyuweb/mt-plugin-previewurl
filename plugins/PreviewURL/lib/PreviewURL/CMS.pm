@@ -17,7 +17,7 @@ sub hdlr_view_preview {
     my $blog = MT->model( 'blog' )->load( $blog_id )
       or return $app->errtrans( "Invalid request." );
 
-    my $obj = MT->model( 'entry.previewurl' )->load(
+    my $obj = MT->model( 'entry' )->load(
         {
             previewurl_key => $key,
             blog_id => $blog->id,
@@ -27,8 +27,8 @@ sub hdlr_view_preview {
             limit => 1
         }) or return $app->errtrans( "Invalid request." );
 
-    my $author = MT->model( 'author' )->load( $obj->author_id );
-    
+    my $author = _load_sysadmin();
+
     $app->param( 'id', $obj->id );
     $obj->authored_on =~ /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
     $app->param( 'authored_on_date', sprintf( "%04d:%02d:%02d", $1, $2, $3 ) );
@@ -61,6 +61,24 @@ sub hdlr_view_preview {
 
     my $fmgr = $blog->file_mgr;
     return $fmgr->get_data( $archive_file );
+}
+
+sub _load_sysadmin {
+    require MT::Author;
+    MT->model('author')->load(
+        {
+            type => MT::Author::AUTHOR()
+        },
+        {   join => MT::Permission->join_on(
+                'author_id',
+                {   permissions => "\%'administer'\%",
+                    blog_id     => '0',
+                },
+                { 'like' => { 'permissions' => 1 } }
+            ),
+            limit => 1
+        }
+    );
 }
 
 1;

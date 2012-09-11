@@ -14,7 +14,7 @@ sub hdlr_template_param_edit_entry {
     my $blog_id = $app->param( 'blog_id' ) or return;
     my $type = $app->param( '_type' ) || 'entry';
 
-    my $obj = MT->model( 'entry.previewurl' )->load(
+    my $obj = MT->model( 'entry' )->load(
         {
             id => $id,
             blog_id => $blog_id,

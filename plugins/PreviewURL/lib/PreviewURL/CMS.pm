@@ -33,6 +33,11 @@ sub hdlr_view_preview {
     $obj->authored_on =~ /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
     $app->param( 'authored_on_date', sprintf( "%04d:%02d:%02d", $1, $2, $3 ) );
     $app->param( 'authored_on_time', sprintf( "%02d-%02d-%02d", $4, $5, $6 ) );
+    my @category_ids = do {
+        my %wk;
+        grep{ !$wk{$_}++ } ($obj->category ? ($obj->category->id) : (), map{ $_->id } @{$obj->categories})
+    };
+    $app->param( 'category_ids', join ',', @category_ids );
 
     $app->param( 'basename', '' );
 
@@ -60,7 +65,11 @@ sub hdlr_view_preview {
       = File::Spec->catfile( $path, $app->preview_object_basename . $file_ext );
 
     my $fmgr = $blog->file_mgr;
-    return $fmgr->get_data( $archive_file );
+    my $html = $fmgr->get_data( $archive_file );
+    
+    $fmgr->delete( $archive_file );
+    
+    return $html;
 }
 
 sub _load_sysadmin {

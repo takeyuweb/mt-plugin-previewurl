@@ -25,7 +25,7 @@ sub hdlr_template_param_edit_entry {
         });
     return unless defined $obj;
 
-    return unless $obj->status == MT::Entry::HOLD();
+    return if $obj->status == MT::Entry::RELEASE();
 
     my $key = $obj->previewurl_key;
     unless ( $key ) {

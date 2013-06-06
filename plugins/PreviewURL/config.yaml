@@ -2,12 +2,12 @@ l10n_class: PreviewURL::L10N
 id: PreviewURL
 key: previewurl
 name: <__trans phrase="PreviewURL">
-version: 1.1.1
+version: 1.2
 author_name: <__trans phrase="_PLUGIN_AUTHOR">
 author_link: http://takeyu-web.com/
 description: <__trans phrase="_PLUGIN_DESCRIPTION">
 
-schema_version: 20130510.001
+schema_version: 20130606001
 
 object_types:
   entry:
@@ -22,7 +22,17 @@ init_request: |
 applications:
   cms:
     methods:
-      view_preview: $PreviewURL::PreviewURL::CMS::hdlr_view_preview
+      view_preview: $PreviewURL::PreviewURL::CMS::_view_preview
 
 callbacks:
-  template_param.edit_entry: $PreviewURL::PreviewURL::Callbacks::hdlr_template_param_edit_entry
+  template_param.edit_entry: $PreviewURL::PreviewURL::Callbacks::_cb_template_param_edit_entry
+  cms_filtered_list_param.entry: $PreviewURL::PreviewURL::Callbacks::_cb_cms_filtered_list_param_entry
+  cms_filtered_list_param.page: $PreviewURL::PreviewURL::Callbacks::_cb_cms_filtered_list_param_entry
+
+list_properties:
+    entry:
+        title:
+            sub_fields:
+                - class: preview-link
+                  label: Preview
+                  display: default

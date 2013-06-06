@@ -7,7 +7,7 @@ use File::Spec;
 use FindBin;
 use File::Basename;
 
-sub hdlr_view_preview {
+sub _view_preview {
     my $app = shift;
     
     my $key = $app->param( 'key' );

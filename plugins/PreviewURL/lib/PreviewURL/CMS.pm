@@ -43,7 +43,10 @@ sub _view_preview {
 
     $app->user( $author );
     $app->permissions( $author->permissions($blog_id) );
-    $app->preview_entry; # プレビューファイル生成
+    
+    without_preview_in_new_window( $app, sub {
+        $app->preview_entry; # プレビューファイル生成
+    } );
 
     # 生成されたファイルの内容を読込
     $obj = MT->model( $type )->load( $obj->id );
@@ -88,6 +91,26 @@ sub _load_sysadmin {
             limit => 1
         }
     );
+}
+
+sub without_preview_in_new_window {
+    my ( $app, $closure ) = @_;
+    my $preview_in_new_window = $app->config( 'PreviewInNewWindow' );
+    my $retval;
+    if ( defined $preview_in_new_window ) {
+        $app->config( 'PreviewInNewWindow', 0 );
+        eval {
+            $retval = $closure->();
+        };
+        if ( my $errmsg = $@ ) {
+            $app->config( 'PreviewInNewWindow', $preview_in_new_window );
+            die $errmsg;
+        }
+        $app->config( 'PreviewInNewWindow', $preview_in_new_window );
+    } else {
+        $retval = $closure->();
+    }
+    return $retval;
 }
 
 1;

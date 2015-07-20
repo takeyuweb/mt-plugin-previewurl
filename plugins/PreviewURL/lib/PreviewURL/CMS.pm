@@ -48,31 +48,24 @@ sub _view_preview {
         $app->preview_entry; # プレビューファイル生成
     } );
 
-    # 生成されたファイルの内容を読込
     $obj = MT->model( $type )->load( $obj->id );
     my $preview_basename = $app->preview_object_basename;
     $obj->basename( $preview_basename );
 
-    my $file_ext     = $blog->file_extension || '';
     my $archive_file = $obj->archive_file();
-
-    my $blog_path
+    
+    my $blog_url
       = $type eq 'page'
-        ? $blog->site_path
-          : ( $blog->archive_path || $blog->site_path );
-    $archive_file = File::Spec->catfile( $blog_path, $archive_file );
-    require File::Basename;
-    my ( $orig_file, $path ) = File::Basename::fileparse($archive_file);
-    $file_ext = '.' . $file_ext if $file_ext ne '';
-    $archive_file
-      = File::Spec->catfile( $path, $app->preview_object_basename . $file_ext );
-
-    my $fmgr = $blog->file_mgr;
-    my $html = $fmgr->get_data( $archive_file );
+        ? $blog->site_url
+          : ( $blog->archive_url || $blog->site_url );
+    my $archive_url = $blog_url . $archive_file;
     
-    $fmgr->delete( $archive_file );
-    
-    return $html;
+    my $plugin = MT->component( 'PreviewURL' );
+    $plugin->load_tmpl( 'preview_frame.tmpl',
+                        {
+                            page_title  => $obj->title,
+                            archive_url => $archive_url
+                        } );
 }
 
 sub _load_sysadmin {

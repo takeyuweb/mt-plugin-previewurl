@@ -59,13 +59,8 @@ sub _view_preview {
         ? $blog->site_url
           : ( $blog->archive_url || $blog->site_url );
     my $archive_url = $blog_url . $archive_file;
-    
-    my $plugin = MT->component( 'PreviewURL' );
-    $plugin->load_tmpl( 'preview_frame.tmpl',
-                        {
-                            page_title  => $obj->title,
-                            archive_url => $archive_url
-                        } );
+
+    $app->redirect( $archive_url );
 }
 
 sub _load_sysadmin {

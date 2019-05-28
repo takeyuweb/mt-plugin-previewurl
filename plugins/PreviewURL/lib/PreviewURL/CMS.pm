@@ -53,6 +53,19 @@ sub _view_preview {
     $obj->basename( $preview_basename );
 
     my $archive_file = $obj->archive_file();
+
+    require File::Basename;
+    my $file_ext;
+    my ($orig_file, $path) = File::Basename::fileparse($archive_file);
+    my $archive_file_ext = (File::Basename::fileparse($orig_file, qr/\.[^\.]+$/))[2];
+    if ($archive_file_ext) {
+        $file_ext = $archive_file_ext;
+    } else {
+        if ( $blog->file_extension ) {
+            $file_ext = '.' . $blog->file_extension;
+        }
+    }
+    $archive_file = File::Spec->catfile($path, $preview_basename . $file_ext);
     
     my $blog_url
       = $type eq 'page'

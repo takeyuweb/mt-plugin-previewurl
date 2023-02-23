@@ -105,6 +105,9 @@ sub preview_url {
     );
     my $cfg = $app->config;
     my $url_base = $cfg->AdminCGIPath || $cfg->CGIPath;
+    if ($url_base !~ m!^https://!) {
+        $url_base = $app->{query}->url;
+    }
     $url_base = $url_base =~ m!^(https?://[^/]+/?).*$!i ? $1 : '/';
     return caturl( $url_base, $uri );
 }

@@ -35,9 +35,13 @@ sub _cb_template_param_edit_entry {
                                            required => 0,
                                            class => 'field-no-header' });
     my $innerHTML = <<"HTML";
-<strong>@{[ $plugin->translate( 'Preview URL' ) ]}:</strong>
-<input type="text" readonly="readonly" onclick="this.select();" style="width: 530px;" value="$preview_url" />
-<a class="button" href="$preview_url" target="<__trans phrase="_external_link_target">"><__trans phrase="View"></a>
+<label>@{[ $plugin->translate( 'Preview URL' ) ]}</label>
+<div class="input-group">
+    <input type="text" readonly="readonly" onclick="this.select();" class="form-control text med" value="$preview_url" />
+    <div class="input-group-append">
+        <a class="button btn btn-default" href="$preview_url" target="_blank"><__trans phrase="View"></a>
+    </div>
+</div>
 HTML
     $nodeset->innerHTML($innerHTML);
     $tmpl->insertAfter($nodeset, $pointer_field);
@@ -101,6 +105,9 @@ sub preview_url {
     );
     my $cfg = $app->config;
     my $url_base = $cfg->AdminCGIPath || $cfg->CGIPath;
+    if ($url_base !~ m!^https://!) {
+        $url_base = $app->{query}->url;
+    }
     $url_base = $url_base =~ m!^(https?://[^/]+/?).*$!i ? $1 : '/';
     return caturl( $url_base, $uri );
 }

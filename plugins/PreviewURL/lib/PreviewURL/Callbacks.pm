@@ -37,7 +37,7 @@ sub _cb_template_param_edit_entry {
     my $innerHTML = <<"HTML";
 <strong>@{[ $plugin->translate( 'Preview URL' ) ]}:</strong>
 <input type="text" readonly="readonly" onclick="this.select();" style="width: 530px;" value="$preview_url" />
-<a class="button" href="$preview_url" target="<__trans phrase="_external_link_target">"><__trans phrase="View"></a>
+<a class="button" href="$preview_url" target="_blank"><__trans phrase="View"></a>
 HTML
     $nodeset->innerHTML($innerHTML);
     $tmpl->insertAfter($nodeset, $pointer_field);
